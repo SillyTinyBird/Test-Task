@@ -8,8 +8,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private PlayerInput _playerInput;
     [SerializeField] private float _playerSpeed = 2.0f;
+    [SerializeField] private GameObject _projectile;
+    [SerializeField] private float _distance;
 
-    void Update()
+    private void Start()
+    {
+        _playerInput.actions["Shoot"].performed += _ => ShootAction();
+        _playerInput.actions["Shoot"].Enable();
+    }
+    private void OnDestroy()
+    {
+        _playerInput.actions["Shoot"].Disable();
+    }
+    void FixedUpdate()
     {
         if(_rigidbody == null)
         {
@@ -24,13 +35,16 @@ public class PlayerController : MonoBehaviour
         Vector2 direction = _playerInput.actions["Move"].ReadValue<Vector2>();
         Vector2 currentPos = new Vector2(transform.position.x, transform.position.y);
         _rigidbody.MovePosition(currentPos + (direction * Time.deltaTime * _playerSpeed));
-        Debug.Log(Vector2.Angle(new Vector2(transform.forward.x,transform.right.y), direction));
         Vector2 currentDir = new Vector2(transform.right.x, transform.right.y);
         float negativeOrPositiveSemicircle = direction.y > 0 ? 1 : -1;
         if(direction != Vector2.zero)
         {
             _rigidbody.MoveRotation(negativeOrPositiveSemicircle * Vector2.Angle(Vector2.right, direction));
         }
-        
+    }
+    void ShootAction()
+    {
+        Vector3 rotatedDirectionVector = Quaternion.Euler(0, 0, 90) * transform.right;
+        Instantiate(_projectile, transform.position + transform.right * _distance , Quaternion.LookRotation(Vector3.forward, rotatedDirectionVector));
     }
 }
