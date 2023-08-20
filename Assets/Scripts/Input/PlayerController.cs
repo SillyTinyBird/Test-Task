@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Photon.Pun;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _playerSpeed = 2.0f;
     [SerializeField] private GameObject _projectile;
     [SerializeField] private float _distance;
+    [SerializeField] private PhotonView _view;
 
     private void Start()
     {
@@ -22,13 +24,14 @@ public class PlayerController : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if(_rigidbody == null)
-        {
+        if(!_view.IsMine) {
+            return;
+        }
+        if(_rigidbody == null){
             Debug.LogWarning("No Rigidbody2D attached to PlayerController script.");
             return;
         }
-        if (_playerInput == null)
-        {
+        if (_playerInput == null){
             Debug.LogWarning("No PlayerInput attached to PlayerController script.");
             return;
         }
@@ -44,6 +47,9 @@ public class PlayerController : MonoBehaviour
     }
     void ShootAction()
     {
+        if (!_view.IsMine){ 
+            return;
+        }
         Vector3 rotatedDirectionVector = Quaternion.Euler(0, 0, 90) * transform.right;
         Instantiate(_projectile, transform.position + transform.right * _distance , Quaternion.LookRotation(Vector3.forward, rotatedDirectionVector));
     }

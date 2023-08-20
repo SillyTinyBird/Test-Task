@@ -10,7 +10,7 @@ public class StatsDisplay : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _health.SetText(_plStats.GetHealth().ToString());
-        _coins.SetText(_plStats.GetCoins().ToString());
+        _health.SetText("Health: " + _plStats.GetHealth().ToString());
+        _coins.SetText("Coins: " + _plStats.GetCoins().ToString());
     }
 }
