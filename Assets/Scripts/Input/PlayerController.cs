@@ -51,6 +51,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
         Vector3 rotatedDirectionVector = Quaternion.Euler(0, 0, 90) * transform.right;
-        Instantiate(_projectile, transform.position + transform.right * _distance , Quaternion.LookRotation(Vector3.forward, rotatedDirectionVector));
+        PhotonNetwork.Instantiate("Projectile", transform.position + transform.right * _distance , Quaternion.LookRotation(Vector3.forward, rotatedDirectionVector));
     }
 }

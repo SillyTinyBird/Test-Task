@@ -4,11 +4,12 @@ using UnityEngine;
 public class IsMineMarker : MonoBehaviour
 {
     [SerializeField] private PhotonView _view;
+    [SerializeField] private GameObject _marker;
     void Start()
     {
         if (!_view.IsMine)
         {
-            Destroy(gameObject);
+            Destroy(_marker);
         }
     }
 }

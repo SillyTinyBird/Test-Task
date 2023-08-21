@@ -1,17 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class FollowTransform : MonoBehaviour
 {
-    [SerializeField] private Transform _transformToFollow;
-    private Vector3 _offset;
+    public GameObject _transformToFollow;
+    [SerializeField] Vector3 _offset;
+    [SerializeField] PhotonView _view;
     private void Start()
     {
-        _offset = transform.position - _transformToFollow.position;
+        if (!_view.IsMine){
+            return;
+        }
+        _offset = transform.position - _transformToFollow.transform.position;
     }
     void Update()
     {
-        transform.position = _transformToFollow.position + _offset;
+        if (!_view.IsMine) {
+            return;
+        }
+        if(_transformToFollow == null)
+        {
+            PhotonNetwork.Destroy(gameObject);
+            return;
+        }
+        transform.position = _transformToFollow.transform.position + _offset;
     }
 }
